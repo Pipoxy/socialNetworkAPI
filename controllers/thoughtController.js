@@ -12,7 +12,7 @@ module.exports = {
       .select("-__v")
       .then((thought) =>
         !thought
-          ? res.status(404).json({ message: "No course with that ID" })
+          ? res.status(404).json({ message: "No thought with that ID" })
           : res.json(thought)
       )
       .catch((err) => res.status(500).json(err));
@@ -55,8 +55,8 @@ module.exports = {
         res.status(500).json(err);
       });
   },
-  deleteThought(req, res) {
-    Thought.findOneAndRemove({ _id: req.params.thoughtId })
+  async deleteThought(req, res) {
+    await Thought.findOneAndRemove({ _id: req.params.thoughtId })
       .then((thought) =>
         !thought
           ? res.status(404).json({ message: "No thought with this id!" })
@@ -66,13 +66,7 @@ module.exports = {
               { new: true }
             )
       )
-      .then((user) =>
-        !user
-          ? res.status(404).json({
-              message: "Thought created but no user with this id!",
-            })
-          : res.json({ message: "Thought successfully deleted!" })
-      )
+      .then(() => res.json({ message: "Thought successfully deleted!" }))
       .catch((err) => res.status(500).json(err));
   },
   async addReaction({ params }, res) {
